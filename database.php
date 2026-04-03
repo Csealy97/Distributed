@@ -1,9 +1,9 @@
 <?php
 class Database {
-    private string $host = "172.16.11.22:3306";     // Plesk: use the host shown in Databases
-    private string $db_name = "seac1_23_message";
-    private string $username = "seac1_23_message"; // Plesk DB user
-    private string $password = "data-mining-02";      // Plesk DB password
+    private string $host = "localhost";     // Plesk: use the host shown in Databases
+    private string $db_name = "distributed";
+    private string $username = "root"; // Plesk DB user
+    private string $password = "";      // Plesk DB password
 
     public ?PDO $conn = null;
 

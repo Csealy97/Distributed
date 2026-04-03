@@ -2,3 +2,5 @@
 Messaging System
 
 http://localhost/Distributed/index.php
+
+Database name: distributed
