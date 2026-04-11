@@ -38,7 +38,12 @@ $groups = $groupStmt->fetchAll();
 <div id="layout">
     <div id="top-bar">
         <span>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-        <a href="logout.php" class="logout-btn">Logout</a>
+        <div>
+            <a href="user_settings.php" class="logout-btn">Settings</a>
+            <a href="logout.php" class="logout-btn">Logout</a>
+        
+        </div>
+        
     </div>
 
     <div id="app">
