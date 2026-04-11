@@ -35,7 +35,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $class = $isSent ? 'sent' : 'received';
     $date = !empty($row['date_sent']) ? date('d M Y H:i', strtotime($row['date_sent'])) : '';
 
-    echo "<div class='message $class'>";
+   $profilePic = !empty($row['sender_pic']) 
+    ? htmlspecialchars($row['sender_pic']) 
+    : 'uploads/default.png';
+
+    if (!empty($row['sender_pic']) && file_exists($row['sender_pic'])) {
+        $profilePic = $row['sender_pic'];
+    } else {
+        $profilePic = 'uploads/default.png';
+    }
+
+        echo "<div class='message-row $class'>";
+
+        // Profile picture
+        echo "<img src='$profilePic' class='message-avatar'>";
+
+        // Message bubble
+        echo "<div class='message $class'>";
 
     if ($chat_type === 'group') {
         echo "<div class='message-name'>" . htmlspecialchars($row['sender_name']) . "</div>";
@@ -61,6 +77,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<div class='message-date'>" . htmlspecialchars($date) . "</div>";
     }
 
-    echo "</div>";
+    echo "</div>"; // message
+echo "</div>"; // row
 }
 ?>

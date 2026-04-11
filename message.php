@@ -28,7 +28,8 @@ class Message {
 
     public function getMessagesWithUsernames($user_from, $user_to) {
     $query = "SELECT m.*, 
-                     u1.user_name AS sender_name, 
+                     u1.user_name AS sender_name,
+                     u1.profile_pic AS sender_pic, 
                      u2.user_name AS receiver_name 
               FROM messages m
               JOIN users u1 ON m.user_from = u1.user_id
@@ -48,8 +49,9 @@ class Message {
 
     public function getGroupMessages($group_id, $user_id) {
     $query = "SELECT m.*, 
-                     u.user_name AS sender_name, 
-                     g.group_name
+                     u.user_name AS sender_name,
+                        u.profile_pic AS sender_pic,
+                        g.group_name
               FROM messages m
               JOIN users u ON m.user_from = u.user_id
               JOIN group_chats g ON m.group_id = g.group_id

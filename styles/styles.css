@@ -348,3 +348,35 @@ html, body {
     flex-shrink: 0;
 }
 
+
+
+
+.message-row {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.message-row.sent {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message {
+    max-width: 60%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background-color: #e4e6eb;
+}
+
+.message.sent {
+    background-color: #4a76a8;
+    color: white;
+}

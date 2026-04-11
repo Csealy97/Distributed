@@ -77,6 +77,8 @@ $groups = $groupStmt->fetchAll();
                 </div>
                 <button type="button" class="small-btn" onclick="createGroup()">Create Group</button>
             </div>
+
+            
         </div>
 
         <div id="chat-container">
