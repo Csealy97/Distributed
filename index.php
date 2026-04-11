@@ -26,6 +26,25 @@ $groupStmt = $db->prepare($groupQuery);
 $groupStmt->bindParam(':current_user', $_SESSION['user_id'], PDO::PARAM_INT);
 $groupStmt->execute();
 $groups = $groupStmt->fetchAll();
+
+// RECENT CHATS (last 5 private conversations)
+$recentQuery = "
+    SELECT u.user_id, u.user_name, u.profile_pic, MAX(m.date_sent) as last_msg
+    FROM messages m
+    JOIN users u ON (
+        (m.user_from = :uid AND u.user_id = m.user_to)
+        OR
+        (m.user_to = :uid AND u.user_id = m.user_from)
+    )
+    WHERE m.group_id IS NULL
+    GROUP BY u.user_id, u.user_name, u.profile_pic
+    ORDER BY last_msg DESC
+    LIMIT 5
+";
+
+$recentStmt = $db->prepare($recentQuery);
+$recentStmt->execute([':uid' => $_SESSION['user_id']]);
+$recentChats = $recentStmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +67,32 @@ $groups = $groupStmt->fetchAll();
 
     <div id="app">
         <div id="sidebar">
+            <h3>Recent Chats</h3>
+
+            <?php if (!empty($recentChats)): ?>
+                <ul class="recent-list">
+                    <?php foreach ($recentChats as $chat): ?>
+                        <li onclick="selectRecentUser(<?php echo (int)$chat['user_id']; ?>, '<?php echo htmlspecialchars($chat['user_name']); ?>')">
+
+                            <?php
+                            $profilePic = !empty($chat['profile_pic']) 
+                                ? htmlspecialchars($chat['profile_pic']) 
+                                : 'uploads/default.png';
+                            ?>
+
+                            <img src="<?php echo $profilePic; ?>" 
+                                class="recent-avatar"
+                                onerror="this.src='uploads/default.png'">
+
+                            <?php echo htmlspecialchars($chat['user_name']); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <div class="empty-recent">No recent chats</div>
+            <?php endif; ?>
+
+
             <h3>Private Chats</h3>
             <select id="recipient">
                 <option value="">-- Select a user --</option>
@@ -257,6 +302,21 @@ function createGroup() {
             alert('Could not create group: ' + xhr.responseText);
         }
     });
+}
+
+function selectRecentUser(userId, userName) {
+    selectedUser = userId;
+    selectedGroup = "";
+    chatType = "user";
+    lastMessagesHtml = "";
+
+    $("#recipient").val(userId);
+    $("#group-select").val("");
+
+    $("#chat-username").text(userName);
+    $("#chat-subtitle").text("Private chat");
+
+    loadMessages();
 }
 
 $('#message-input').keypress(function(e) {
