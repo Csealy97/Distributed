@@ -119,28 +119,25 @@ $user = $stmt->fetch();
     <div id="top-bar">
         <span><?php echo htmlspecialchars($_SESSION['user_name']); ?>'s Account Settings</span>
         <div>
-            <a href="index.php" class="logout-btn">Back</a>
+            <a href="index.php" class="logout-btn">Home</a>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
     </div>
+
+
 
     <!-- MAIN CONTENT -->
     <div id="app">
         <div id="chat-container">
 
-           
+        <div id="message-container" class="settings-content">
 
-            <div id="message-container" class="settings-content">
+       
 
-                <?php if ($success): ?>
-                    <div class="success"><?php echo htmlspecialchars($success); ?></div>
-                <?php endif; ?>
+        <div class="settings-grid">
 
-                <?php if ($error): ?>
-                    <div class="error"><?php echo htmlspecialchars($error); ?></div>
-                <?php endif; ?>
-
-                <!-- PROFILE -->
+            <!-- LEFT COLUMN -->
+            <div class="settings-column">
                 <div class="settings-card">
                     <h3>Profile Picture</h3>
 
@@ -153,8 +150,11 @@ $user = $stmt->fetch();
                         <button type="submit">Upload</button>
                     </form>
                 </div>
+            </div>
 
-                <!-- USERNAME -->
+            <!-- RIGHT COLUMN -->
+            <div class="settings-column">
+
                 <div class="settings-card">
                     <h3>Change Username</h3>
                     <form method="post">
@@ -163,7 +163,6 @@ $user = $stmt->fetch();
                     </form>
                 </div>
 
-                <!-- PASSWORD -->
                 <div class="settings-card">
                     <h3>Change Password</h3>
                     <form method="post">
@@ -174,7 +173,6 @@ $user = $stmt->fetch();
                     </form>
                 </div>
 
-                <!-- DELETE -->
                 <div class="settings-card danger">
                     <h3>Danger Zone</h3>
                     <form method="post">
@@ -188,7 +186,7 @@ $user = $stmt->fetch();
             </div>
 
         </div>
-    </div>
+                    </div>
 </div>
 
 </body>
