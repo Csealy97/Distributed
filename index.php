@@ -101,12 +101,14 @@ $groups = $groupStmt->fetchAll();
 let selectedUser = "";
 let selectedGroup = "";
 let chatType = "";
+let lastMessagesHtml = "";
 
 $("#recipient").change(function () {
     selectedUser = $(this).val();
     selectedGroup = "";
     chatType = selectedUser ? "user" : "";
     $("#group-select").val("");
+    lastMessagesHtml = "";
 
     const name = $("#recipient option:selected").text();
     $("#chat-username").text(selectedUser ? name : "Select a chat");
@@ -124,6 +126,7 @@ $("#group-select").change(function () {
     selectedUser = "";
     chatType = selectedGroup ? "group" : "";
     $("#recipient").val("");
+    lastMessagesHtml = "";
 
     const name = $("#group-select option:selected").text();
     $("#chat-username").text(selectedGroup ? name : "Select a chat");
@@ -187,10 +190,8 @@ function sendMessage() {
 function loadMessages() {
     if (!chatType) return;
 
-    $('#message-container').html("Loading...");
-
     const data = {
-        chat_type: chatType,
+        chat_type: chatType
     };
 
     if (chatType === 'group') {
@@ -204,9 +205,13 @@ function loadMessages() {
         type: 'GET',
         data: data,
         success: function (response) {
-            $('#message-container').html(response);
-            const el = document.getElementById('message-container');
-            el.scrollTop = el.scrollHeight;
+            if (response !== lastMessagesHtml) {
+                $('#message-container').html(response);
+                lastMessagesHtml = response;
+
+                const el = document.getElementById('message-container');
+                el.scrollTop = el.scrollHeight;
+            }
         }
     });
 }
@@ -257,6 +262,7 @@ $('#file-upload').change(function() {
     const fileName = this.files[0]?.name || '';
     $('#selected-file-name').text(fileName);
 });
+
 
 setInterval(() => {
     if (chatType) {
