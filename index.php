@@ -474,6 +474,10 @@ $(document).ready(function () {
 });
 
 setInterval(() => {
+    loadRecentChats();
+}, 3000);
+
+setInterval(() => {
     if (chatType) {
         loadMessages();
     }
