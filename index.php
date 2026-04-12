@@ -59,21 +59,32 @@ if (isset($_GET['fetch']) && $_GET['fetch'] === 'recent') {
     }
 
     echo "<ul class='recent-list'>";
-    foreach ($recentChats as $chat) {
 
-        echo "<li onclick=\"selectRecent('{$chat['type']}', {$chat['id']}, '" . htmlspecialchars($chat['name']) . "')\">";
+$first = true;
 
-        if ($chat['type'] === 'user') {
-            $pic = !empty($chat['profile_pic']) ? $chat['profile_pic'] : 'uploads/default.png';
-            echo "<img src='$pic' class='recent-avatar'>";
-        } else {
-            echo "<div class='group-icon'>🙂</div>";
-        }
+foreach ($recentChats as $chat) {
 
-        echo htmlspecialchars($chat['name']);
-        echo "</li>";
+    echo "<li 
+        class='recent-item " . ($first ? "auto-open" : "") . "'
+        data-type='{$chat['type']}'
+        data-id='{$chat['id']}'
+        data-name=\"" . htmlspecialchars($chat['name']) . "\"
+        onclick=\"selectRecent('{$chat['type']}', {$chat['id']}, '" . htmlspecialchars($chat['name']) . "')\">";
+
+    if ($chat['type'] === 'user') {
+        $pic = !empty($chat['profile_pic']) ? $chat['profile_pic'] : 'uploads/default.png';
+        echo "<img src='$pic' class='recent-avatar'>";
+    } else {
+        echo "<div class='group-icon'>🙂</div>";
     }
-    echo "</ul>";
+
+    echo htmlspecialchars($chat['name']);
+    echo "</li>";
+
+    $first = false; // 👈 IMPORTANT
+}
+
+echo "</ul>";
 
     exit; // IMPORTANT
 }
@@ -459,12 +470,24 @@ function closeGroupModal() {
     $('#group-modal').fadeOut(150);
 }
 
-
 function loadRecentChats() {
     $.ajax({
         url: 'index.php?fetch=recent',
         success: function (html) {
             $('#recent-chats').html(html);
+
+            // ✅ Auto-open ONLY if no chat selected yet
+            if (!chatType) {
+                const first = document.querySelector('.recent-item.auto-open');
+
+                if (first) {
+                    const type = first.dataset.type;
+                    const id = first.dataset.id;
+                    const name = first.dataset.name;
+
+                    selectRecent(type, id, name);
+                }
+            }
         }
     });
 }
